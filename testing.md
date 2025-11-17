@@ -1,3 +1,5 @@
+NOTA: para ejcutar el proyecto este comando `npm run start:dev`
+
 Las pruebas deben ser:
 
 - faciles de escribir
