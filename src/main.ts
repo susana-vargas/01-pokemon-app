@@ -12,6 +12,8 @@ async function bootstrap() {
     }),
   );
 
+  //agrega un aliasglobal para todas las rutas (localhost:3000/api/pokemons?limit=20)
+  app.setGlobalPrefix('api');
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
