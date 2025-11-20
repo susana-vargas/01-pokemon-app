@@ -22,4 +22,19 @@ describe('PokemonsService', () => {
     console.log(result);
     expect(result).toBe(`This action adds a ${data.name}`);
   });
+
+  it('should return pokemon if exists', async () => {
+    const id = 4;
+    const result = await service.findOne(id);
+    expect(result).toEqual({
+      id: 4,
+      name: 'charmander',
+      type: 'fire',
+      hp: 39,
+      sprites: [
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png',
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/4.png',
+      ],
+    });
+  });
 });
