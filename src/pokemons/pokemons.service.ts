@@ -10,7 +10,7 @@ import { PokeapiPokemonResponse } from './interfaces/pokeapi-pokemon.response';
 export class PokemonsService {
   paginatedPokemonsCache = new Map<number, Pokemon[]>();
   create(createPokemonDto: CreatePokemonDto) {
-    return 'This action adds a new pokemon';
+    return `This action adds a ${createPokemonDto.name}`;
   }
 
   async findAll(paginationDto: PaginationDto): Promise<Pokemon[]> {
@@ -36,7 +36,7 @@ export class PokemonsService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} pokemon`;
+    return this.getPokemonInformation(id);
   }
 
   update(id: number, updatePokemonDto: UpdatePokemonDto) {
