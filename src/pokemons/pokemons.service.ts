@@ -8,7 +8,7 @@ import { PokeapiPokemonResponse } from './interfaces/pokeapi-pokemon.response';
 
 @Injectable()
 export class PokemonsService {
-  paginatedPokemonsCache = new Map<number, Pokemon[]>();
+  paginatedPokemonsCache = new Map<string, Pokemon[]>();
   create(createPokemonDto: CreatePokemonDto) {
     return `This action adds a ${createPokemonDto.name}`;
   }
@@ -17,8 +17,8 @@ export class PokemonsService {
     const { limit = 10, page = 1 } = paginationDto;
     const offset = (page - 1) * limit;
     const cacheKey = `${limit}-${page}`;
-    if (this.paginatedPokemonsCache.has(+cacheKey)) {
-      return this.paginatedPokemonsCache.get(+cacheKey)!;
+    if (this.paginatedPokemonsCache.has(cacheKey)) {
+      return this.paginatedPokemonsCache.get(cacheKey)!;
     }
     const url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
     const response = await fetch(url);
@@ -30,7 +30,7 @@ export class PokemonsService {
       return this.getPokemonInformation(+id);
     });
     const pokemons = await Promise.all(pokemonPromises);
-    this.paginatedPokemonsCache.set(+cacheKey, pokemons);
+    this.paginatedPokemonsCache.set(cacheKey, pokemons);
 
     return pokemons;
   }
