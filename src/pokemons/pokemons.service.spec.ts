@@ -39,6 +39,21 @@ describe('PokemonsService', () => {
     });
   });
 
+  it('should check properties of the pokemon', async () => {
+    const id = 4;
+    const pokemon = await service.findOne(id);
+    expect(pokemon).toHaveProperty('id');
+    expect(pokemon).toHaveProperty('name');
+    //verifica si lo que se espera si termina siendo lo que esperamos y que sea un numero
+    expect(pokemon).toEqual(
+      expect.objectContaining({
+        id: id,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        hp: expect.any(Number),
+      }),
+    );
+  });
+
   it('should return 404 error if pokemon does not exist', async () => {
     const id = 400_000;
     await expect(service.findOne(id)).rejects.toThrow(NotFoundException);
