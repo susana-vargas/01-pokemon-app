@@ -10,7 +10,7 @@ import { PokeapiPokemonResponse } from './interfaces/pokeapi-pokemon.response';
 export class PokemonsService {
   paginatedPokemonsCache = new Map<string, Pokemon[]>();
   create(createPokemonDto: CreatePokemonDto) {
-    return `This action adds a ${createPokemonDto.name}`;
+    return Promise.resolve(`This action adds a ${createPokemonDto.name}`);
   }
 
   async findAll(paginationDto: PaginationDto): Promise<Pokemon[]> {
@@ -42,11 +42,11 @@ export class PokemonsService {
   }
 
   update(id: number, updatePokemonDto: UpdatePokemonDto) {
-    return `This action updates a #${id} pokemon`;
+    return Promise.resolve(`This action updates a #${id} pokemon`);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} pokemon`;
+    return Promise.resolve(`This action removes a #${id} pokemon`);
   }
 
   private async getPokemonInformation(id: number): Promise<Pokemon> {
