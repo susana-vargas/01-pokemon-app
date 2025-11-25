@@ -59,4 +59,21 @@ describe('Main.ts Bootstrap', () => {
 
     expect(mockApp.listen).toHaveBeenCalledWith(process.env.PORT);
   });
+
+  it('should use global pipes', async () => {
+    await bootstrap();
+
+    //verifica que useGlobalPipes() se haya llamado
+    //Y que se le paso un objeto con configuracion correcta
+    expect(mockApp.useGlobalPipes).toHaveBeenCalledWith(
+      expect.objectContaining({
+        errorHttpStatusCode: 400,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        validatorOptions: expect.objectContaining({
+          forbidNonWhitelisted: true,
+          whitelist: true,
+        }),
+      }),
+    );
+  });
 });
