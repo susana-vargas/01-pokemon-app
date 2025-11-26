@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PokemonsService } from './pokemons.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 
 describe('PokemonsService', () => {
   let service: PokemonsService;
@@ -121,5 +122,42 @@ describe('PokemonsService', () => {
     expect(cacheSpy).toHaveBeenCalledWith('10-1');
 
     expect(fetchSpy).toHaveBeenCalledTimes(11);
+  });
+
+  it('should update pokemon', async () => {
+    const id = 1;
+    const dto: UpdatePokemonDto = { name: 'Charmander 2' };
+    const updatedPokemon = await service.update(id, dto);
+    expect(updatedPokemon).toEqual({
+      id: 1,
+      name: dto.name,
+      type: 'grass',
+      hp: 45,
+      sprites: [
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png',
+      ],
+    });
+  });
+
+  it('should not update pokemon if not exists', async () => {
+    const id = 1_000_000;
+    const dto: UpdatePokemonDto = { name: 'Charmander 2' };
+
+    try {
+      await service.update(id, dto);
+      expect(true).toBeFalsy();
+    } catch (error) {
+      expect(error).toBeInstanceOf(NotFoundException);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      expect(error.message).toBe(`Pokemon with id ${id} not found`);
+    }
+  });
+
+  it('should removed pokemon from caché', async () => {
+    const id = 1;
+    await service.findOne(id);
+    await service.remove(id);
+    expect(service.pokemonsCache.get(id)).toBeUndefined();
   });
 });
