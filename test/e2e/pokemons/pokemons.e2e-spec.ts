@@ -63,4 +63,21 @@ describe('Pokemons (e2e)', () => {
     //verifica que los errores sean los esperados
     expect(messageArray).toEqual(expect.arrayContaining(mostHaveErrorMessage));
   });
+
+  it('/pokemons (POST) - with valid body', async () => {
+    const response = await request(app.getHttpServer()).post('/pokemons').send({
+      name: 'Pikachu',
+      type: 'Electric',
+    });
+
+    expect(response.statusCode).toBe(201);
+    expect(response.body).toEqual({
+      name: 'Pikachu',
+      type: 'Electric',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      id: expect.any(Number),
+      hp: 0,
+      sprites: [],
+    });
+  });
 });
