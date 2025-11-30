@@ -3,6 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../../../src/app.module';
+import { Pokemon } from 'src/pokemons/entities/pokemon.entity';
 
 describe('Pokemons (e2e)', () => {
   let app: INestApplication<App>;
@@ -78,6 +79,28 @@ describe('Pokemons (e2e)', () => {
       id: expect.any(Number),
       hp: 0,
       sprites: [],
+    });
+  });
+
+  it('/pokemons (GET) should return paginated list of pokemons', async () => {
+    //crea un cliente HTTP de prueba (Supertest) que permite llamar a endpoints dentro
+    //del test sin necesitar un servidor real
+    const response = await request(app.getHttpServer())
+      .get('/pokemons')
+      .query({ limit: 5, page: 1 });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    expect(response.body.length).toBe(5);
+
+    //verifica que cada pokemon recibido tenga las propiedades de acuerdo al tipo
+    (response.body as Pokemon[]).forEach((pokemon) => {
+      expect(pokemon).toHaveProperty('id');
+      expect(pokemon).toHaveProperty('name');
+      expect(pokemon).toHaveProperty('type');
+      expect(pokemon).toHaveProperty('hp');
+      expect(pokemon).toHaveProperty('sprites');
     });
   });
 });
